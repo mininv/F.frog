@@ -20,6 +20,7 @@ class Point{
     }
 
 }
+
 public class Frog {
     int width;
     int height;
@@ -37,17 +38,13 @@ public class Frog {
                 map[i][j] = -1;
             }
         }
-        for (int i = 0; i < width; i++) {
-            for (int z = 0; z < height; z++){
-                System.out.print(map[i][z] + " ");
-            }
-            System.out.println();
-        }
     }
+
     public void block(int x, int y) {
         // метод для установки препятствий
         map[y][x] = wall;
     }
+//метод вывода на экран матрицы
     void mapOnmonitor () {
         for (int i = 0; i < width; i++) {
             for (int z = 0; z < height; z++){
@@ -56,6 +53,7 @@ public class Frog {
             System.out.println();
         }
     }
+//клонирование одной матрицы в другую
     private int[][] clone(int[][] map) {
         int[][] cloneMap = new int[width][height];
         for (int i = 0; i < map.length; i++)
@@ -63,8 +61,9 @@ public class Frog {
                 cloneMap[i][j] = map[i][j];
         return cloneMap;
     }
-
+//поиск пути через координаты. 
     public void findPath(int x, int y, int nx, int ny) {
+//првоерка не попадания в препятствия
         if (map[y][x] == wall || map[ny][nx] == wall) {
             System.out.println("Невозможно построить путь");
             return;
@@ -73,9 +72,9 @@ public class Frog {
         int[][] cloneMap = clone(map);
         List<Point> oldWave = new ArrayList<Point>();
         oldWave.add(new Point(nx, ny));
-        int nstep = 0;
+        int nstep = 0;//переменная подсчета прыжков
         map[ny][nx] = nstep;
-
+// варианты прыжка по х и у
         int[] dx = { 2, 1, 3, 1 ,2 };
         int[] dy = { 1, 2, 0, -2, -1 };
 
