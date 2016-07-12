@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by vlad on 12.07.16.
+ */
 class Point{
     int x;
     int y;
@@ -8,122 +14,100 @@ class Point{
     public int getX() {
         return x;
     }
-
+ void setX(int x) {this.x = x; }
     public int getY() {
         return y;
     }
 
 }
 public class Frog {
+    int width;
+    int height;
+    int wall = 99;
+    int[][] map;
+    List<Point> wave = new ArrayList<Point>();// лист точек
 
-
-    int[][] fillmap = new int[10][16]; // Pазмеp == pазмеpу лабиpинта !
-    int[][] labyrinth = new int[10][16];
-    Point[] buf= new Point[160];
-    int position = 0;
-    int XSIZE = 10;
-    int YSIZe = 16;
-
-    void ppprint() {// метод для обнуления всего массива
-        for (int i = 0; i < 10; i++) {
-            for (int z = 0; z < 16; z++){
-                fillmap[i][z] = 0;
+    public Frog(int width, int height) {
+        this.width = width;
+        this.height = height;
+        map = new int[width][height];
+//заполняем массив значениями -1
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                map[i][j] = -1;
+            }
+        }
+        for (int i = 0; i < width; i++) {
+            for (int z = 0; z < height; z++){
+                System.out.print(map[i][z] + " ");
             }
             System.out.println();
         }
     }
-
-    void ppprint1() {//метод для печати масчсива
-        for (int i = 0; i < 10; i++) {
-            for (int z = 0; z < 16; z++){
-                System.out.print(fillmap[i][z] + " ");
+    public void block(int x, int y) {
+        // метод для установки препятствий
+        map[y][x] = wall;
+    }
+    void mapOnmonitor () {
+        for (int i = 0; i < width; i++) {
+            for (int z = 0; z < height; z++){
+                System.out.print(map[i][z] + " ");
             }
             System.out.println();
         }
     }
-
-    void recr(Point start, Point end){
-        int x = start.getX();
-        int y = start.getY();
-        int n =1;
-        Point p = new Point(x,y);
-        buf[position++] = p;
-        for (Point tuper : buf){
-            if (fillmap[tuper.getX()][(tuper.getY()+3)] == 0){
-                fillmap[tuper.getX()][(tuper.getY()+3)] = n;
-                buf[position++]= new Point(tuper.getX(), (tuper.getY()+3));
-            }
-            if (tuper!=null & fillmap[tuper.getX() + 2][tuper.getY() + 1] == 0) {
-                fillmap[tuper.getX() + 2][tuper.getY() + 1] = n;
-                buf[position++] = (new Point(tuper.getX() + 2, tuper.getY() + 1));
-            }
-            if (tuper!=null & fillmap[tuper.getX() + 1][tuper.getY() + 2] == 0) {
-                fillmap[tuper.getX() + 1][tuper.getY() + 2] = n;
-                buf[position++] = (new Point(tuper.getX() + 1, tuper.getY() + 2));
-            }
-            if (tuper!=null & fillmap[tuper.getX() - 1][tuper.getY() + 2] == 0) {
-                fillmap[tuper.getX() - 1][tuper.getY() + 2] = n;
-                buf[position++] = (new Point(tuper.getX() - 1, tuper.getY() + 2));
-            }
-            if (tuper!=null & fillmap[tuper.getX() - 2][tuper.getY() + 1] == 0) {
-                fillmap[tuper.getX() - 2][tuper.getY() + 1] = n;
-                buf[position++]=new Point(tuper.getX() - 2,tuper.getY() + 1);
-            }
-             break;
-        }
-
-        /*int x = start.getX();
-        int y = start.getY();
-        int n=1;
-        boolean isEmpty = false;
-        Point p = new Point(start.getX(), start.getY());
-        buf[position++]= p;
-        while(!isEmpty) {
-            for (Point tuper : buf) {
-                fillmap[tuper.getX()][tuper.getY() + 3] = n;
-                if (tuper == null)break;
-                if (tuper!=null &  fillmap[tuper.getX()][tuper.getY() + 3] == 0) {
-                    fillmap[tuper.getX()][tuper.getY() + 3] = n;
-                    buf[position++] = (new Point(tuper.getX(), tuper.getY() + 3));
-                }
-                if (tuper!=null & fillmap[tuper.getX() + 2][tuper.getY() + 1] == 0) {
-                    fillmap[tuper.getX() + 2][tuper.getY() + 1] = n;
-                    buf[position++] = (new Point(tuper.getX() + 2, tuper.getY() + 1));
-                }
-                if (tuper!=null & fillmap[tuper.getX() + 1][tuper.getY() + 2] == 0) {
-                    fillmap[tuper.getX() + 1][tuper.getY() + 2] = n;
-                    buf[position++] = (new Point(tuper.getX() + 1, tuper.getY() + 2));
-                }
-                if (tuper!=null & fillmap[tuper.getX() - 1][tuper.getY() + 2] == 0) {
-                    fillmap[tuper.getX() - 1][tuper.getY() + 2] = n;
-                    buf[position++] = (new Point(tuper.getX() - 1, tuper.getY() + 2));
-                }
-                if (tuper!=null & fillmap[tuper.getX() - 2][tuper.getY() + 1] == 0) {
-                    fillmap[tuper.getX() - 2][tuper.getY() + 1] = n;
-                    buf[position++]=new Point(tuper.getX() - 2,tuper.getY() + 1);
-                }
-                //else isEmpty = true;*/
-
-
-            //}
-
-       // }
-
-
+    private int[][] clone(int[][] map) {
+        int[][] cloneMap = new int[width][height];
+        for (int i = 0; i < map.length; i++)
+            for (int j = 0; j < map[i].length; j++)
+                cloneMap[i][j] = map[i][j];
+        return cloneMap;
     }
-    private boolean outOfBounds(int x, int y) {
-        return x < 0 || y < 0 || x >= XSIZE || y >= YSIZE;
+
+    public void findPath(int x, int y, int nx, int ny) {
+        if (map[y][x] == wall || map[ny][nx] == wall) {
+            System.out.println("Невозможно построить путь");
+            return;
+        }
+        
+        int[][] cloneMap = clone(map);
+        List<Point> oldWave = new ArrayList<Point>();
+        oldWave.add(new Point(nx, ny));
+        int nstep = 0;
+        map[ny][nx] = nstep;
+
+        int[] dx = { 2, 1, 3, 1 ,2 };
+        int[] dy = { 1, 2, 0, -2, -1 };
+
+        while (oldWave.size() > 0) {
+            nstep++;
+            wave.clear();
+            for (Point i : oldWave) {
+                for (int d = 0; d < 5; d++) {
+                    nx = i.x + dx[d];
+                    ny = i.y + dy[d];
+                    if (nx > 15) nx = nx -16;
+                    if ( ny <10  && ny>=0  && map[ny][nx] == -1) {
+                        wave.add(new Point(nx, ny));
+                        map[ny][nx] = nstep;
+                    }
+                }
+            }
+            oldWave = new ArrayList<Point>(wave);
+        }
+       System.out.println("мин число прыжков до точки - " + map[y][x]);
+
     }
 
     public static void main(String[] args) {
-        Frog fg = new Frog();
+        Frog fg = new Frog(10,16);// задается массив в ширину и высоту
+        fg.block(10,1);//препятствия
+        fg.block(1,9);// препятствия
+
         System.out.println();
-        fg.fillmap[2][8] = -1;
-        fg.fillmap[4][5] = -1;
-        Point start = new Point(4,3);
-        Point end = new Point(2,6);
-        fg.recr(start, end);
+        fg.mapOnmonitor();// массив до
+        fg.findPath(4,1,1,6); // здесь вводится конечная и начальная точка
         System.out.println();
-        fg.ppprint1();
+        fg.mapOnmonitor(); //вывод на экран получившегося массива
     }
 }
